@@ -17,6 +17,9 @@ module.exports = function (grunt) {
         file: 'app.js'
       }
     },
+    mocha: {
+      index:['test/index.html']
+    },
     watch: {
       options: {
         nospawn: true,
@@ -37,6 +40,7 @@ module.exports = function (grunt) {
     }
   });
 
+
   grunt.config.requires('watch.js.files');
   files = grunt.config('watch.js.files');
   files = grunt.file.expand(files);
@@ -55,5 +59,7 @@ module.exports = function (grunt) {
     }, 500);
   });
 
+
+  grunt.loadNpmTasks('grunt-mocha');
   grunt.registerTask('default', ['develop', 'watch']);
 };

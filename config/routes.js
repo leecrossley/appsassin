@@ -1,6 +1,5 @@
 module.exports = function(app){
 
-	//home route
 	var home = require('../app/controllers/home');
 	app.get('/', home.index);
 
@@ -9,5 +8,8 @@ module.exports = function(app){
 	app.get('/pictures', pictures.index);
 	app.get('/pictures/:pictureId', pictures.show);
 
+	var user = require('../app/controllers/user');
+    app.post('/user',user.create);
+    app.get('/user:id',user.id);
 
 };
