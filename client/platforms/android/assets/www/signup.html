@@ -5,8 +5,18 @@
             <h1>Signup</h1>
         </header>
         <div class="container">
-            <h3>Please upload a photo of yourself to begin signup:</h3>
-            <a class="upload" href="#">Take a photo</a>
+            <div class="step1" style="display:none;">
+                <h3>Please enter your phone number for SMS alerts:</h3>
+                <input class="number" type="tel" />
+                <input class="submit" type="submit" value="Next" />
+            </div>
+            <div class="step2" style="display:none;">
+                <h3>Please upload a photo, which clearly identifies your face:</h3>
+                <a class="upload" href="#">Take a photo</a>
+            </div>
+            <div class="wait" style="display:none;">
+                <h3>Registering...</h3>
+            </div>
         </div>
     </body>
 </html>

@@ -3,6 +3,13 @@ var mongoose = require('mongoose'),
   User = mongoose.model('User'),
   unirest = require('unirest');
 
+
+var createPictureTarget = function(encoded) {
+  var picture = createPicture(encoded);
+  picture.isTarget = true;
+  return picture;
+};
+
 var createPicture = function(encoded) {
   var picture = new Picture();
   picture.encoded = encoded;
@@ -13,24 +20,28 @@ var learn = function(username, url) {
 
   console.log("Posting to album_train, " + username);
 
-  // TODO: create game album if it doesn't exist
   var album = "appsassindefault";
   var albumkey = "ed742659aa2cedd19b075cfbd683d5e64a795fa50d867784e51ec60e82f44eb8";
 
   unirest.post('https://lambda-face-recognition.p.mashape.com/album_train')
     .headers({
       "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D" })
-    .send({ 
-      "album": album, 
-      "albumkey": albumkey,
-      "entryid": username,
-      "urls": url }
-      )
+    .field("album", album)
+    .field("albumkey", albumkey)
+    .field("entryid", username)
+    .field("urls", url)
     .end(function (response) {
-      // need to check that this succeeded ...
       console.log(response.body);
+      if (response.body.error){
+        console.log("there was an error sending picture for recog: " + response.body.error);
+      }
     });
 };
+
+var generatePictureUrl = function(host, id){
+  return host + "/pictures/" + id; 
+};
+
 
 exports.index = function(req, res){
   Picture.find(function(err, pictures){
@@ -76,8 +87,38 @@ exports.newuser = function(req, res){
 
       user.defaultImage = picture.id;
       user.save();
-      
-      learn(user.username, req.headers.host + "/pictures/" + picture.id);
+
+      learn(user.username, generatePictureUrl(req.headers.host, picture.id));
   });
 };
 
+exports.recognise = function(req, res) {
+  console.log("Recognise player ...");
+
+  var picture = createPictureTarget(req.body.defaultImage);
+  picture.save();
+
+  var url = generatePictureUrl(req.headers.host, picture.id);
+
+  console.log("Trying to recognise player via url: " + url);
+
+  var album = "appsassindefault";
+  var albumkey = "ed742659aa2cedd19b075cfbd683d5e64a795fa50d867784e51ec60e82f44eb8";
+
+  console.log(url);
+
+  unirest.post('https://lambda-face-recognition.p.mashape.com/recognize?album=' + album +
+    "&albumkey=" + albumkey)
+    .headers({
+      "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D" })
+    .field("album", album)
+    .field("albumkey", albumkey)
+    .field("urls", url)
+    .end(function (response) {
+      console.log(response.body);
+      if (response.body.error){
+        console.log("there was an error sending picture for recog: " + response.body.error);
+        // TODO: return matches ...
+      }
+    });
+};
