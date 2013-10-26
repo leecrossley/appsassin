@@ -1,24 +1,18 @@
 var appsassin = (function () {
     var appsassin = {},
         currentView,
-        user;
+        userId,
+        game;
 
     // Called when the app is loaded
     appsassin.init = function () {
         overrideBackButton();
-        user = localStorage.getItem("number");
-        var options = {
-            element: "map",
-            accuracy: true,
-            compass: true
-        };
-        var map = new Tracker.Map(options);
-        map.watchPosition();
-        /*if (typeof (user) !== "undefined" && user !== null) {
+        userId = localStorage.getItem("userId");
+        if (typeof (userId) !== "undefined" && userId !== null) {
             appsassin.switchView("main");
         } else {
             appsassin.switchView("signup");
-        }*/
+        }
     };
 
     // Switches the HTML view
@@ -94,8 +88,9 @@ var appsassin = (function () {
         function cameraSuccess(imageData) {
             $(".step2").hide();
             $(".wait").show();
-            server.signup(number, imageData, function() {
-                localStorage.setItem("number", number);
+            server.signup(number, imageData, function(user) {
+                console.log(user);
+                localStorage.setItem("userId", user._id);
                 appsassin.switchView("main");
             });
         }
@@ -130,8 +125,25 @@ var appsassin = (function () {
 
         // Checks for games in the current location
         function geolocationSuccess(position) {
-            alert("Lat: " + position.coords.latitude);
-            alert("Long: " + position.coords.longitude);
+            server.getLocalGames(position.coords.latitude, position.coords.longitude, handleGames);
+        }
+
+        // Assigns any local games returned from the server
+        function handleGames(games) {
+            if (games && games.length > 0) {
+                server.joinGame(games[0]._id, userId, otherPlayers);
+            } else {
+                alert("There are no local games available to join");
+                $(".wait").hide();
+                $(".check").show();
+            }
+        }
+
+        // Waiting for other players
+        function otherPlayers(game) {
+            console.log(game);
+            $(".wait").hide();
+            $(".others").show();
         }
 
         function geolocationError(message) {
@@ -148,11 +160,8 @@ var appsassin = (function () {
         var game = {};
 
         game.init = function () {
-            var options = {
-                accuracy: true,
-                compass: true
-            };
-            var map = new Tracker.Map(options);
+            var map = new Tracker.Map();
+            // Tracks my position on the map
             map.watchPosition();
         };
 
