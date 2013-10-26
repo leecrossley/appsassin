@@ -7,11 +7,18 @@ var appsassin = (function () {
     appsassin.init = function () {
         overrideBackButton();
         user = localStorage.getItem("number");
-        if (typeof (user) !== "undefined" && user !== null) {
+        var options = {
+            element: "map",
+            accuracy: true,
+            compass: true
+        };
+        var map = new Tracker.Map(options);
+        map.watchPosition();
+        /*if (typeof (user) !== "undefined" && user !== null) {
             appsassin.switchView("main");
         } else {
             appsassin.switchView("signup");
-        }
+        }*/
     };
 
     // Switches the HTML view
@@ -74,8 +81,11 @@ var appsassin = (function () {
                 e.preventDefault();
                 e.stopPropagation();
                 navigator.camera.getPicture(cameraSuccess, cameraFail, {
-                    quality: 60,
+                    quality: 49,
                     targetWidth: 320,
+                    targetHeight: 320,
+                    encodingType: Camera.EncodingType.JPEG,
+                    cameraDirection: Camera.Direction.FRONT,
                     destinationType: Camera.DestinationType.DATA_URL
                 });
             });
@@ -118,6 +128,7 @@ var appsassin = (function () {
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, options);
         };
 
+        // Checks for games in the current location
         function geolocationSuccess(position) {
             alert("Lat: " + position.coords.latitude);
             alert("Long: " + position.coords.longitude);
@@ -132,7 +143,24 @@ var appsassin = (function () {
         return main;
     })();
 
+    // Game screen - handles game play
+    appsassin.game = (function () {
+        var game = {};
+
+        game.init = function () {
+            var options = {
+                accuracy: true,
+                compass: true
+            };
+            var map = new Tracker.Map(options);
+            map.watchPosition();
+        };
+
+        return game;
+    })();
+
     return appsassin;
 })();
 
+// Cordova is ready, start appsassin
 document.addEventListener("deviceready", appsassin.init, false);
