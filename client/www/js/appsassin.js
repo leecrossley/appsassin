@@ -1,10 +1,16 @@
 var appsassin = (function () {
     var appsassin = {},
-        currentView;
+        currentView,
+        user;
 
     appsassin.init = function () {
         overrideBackButton();
-        appsassin.switchView("signup");
+        user = localStorage.getItem("number");
+        if (typeof (user) !== "undefined" && user !== null) {
+            appsassin.switchView("main");
+        } else {
+            appsassin.switchView("signup");
+        }
     };
 
     appsassin.switchView = function (viewName, elementId, additionalCallback) {
@@ -40,11 +46,43 @@ var appsassin = (function () {
     }
 
     appsassin.signup = (function () {
-        var signup = {};
+        var signup = {},
+            number;
+
+        signup.init = function () {
+            $(".step1").show();
+            $(".submit").bind("click", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                number = $(".number").val();
+                if (number.length === 11) {
+                    step2();
+                } else {
+                    alert("Please ensure your phone number is correct")
+                }
+            });
+        };
+
+        function step2() {
+            $(".step1").hide();
+            $(".step2").show();
+            $(".upload").bind("click", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                navigator.camera.getPicture(cameraSuccess, cameraFail, {
+                    quality: 60,
+                    targetWidth: 320,
+                    destinationType: Camera.DestinationType.DATA_URL
+                });
+            });
+        }
 
         function cameraSuccess(imageData) {
-            server.signup("07123456789", imageData, function() {
-                alert("success?");
+            $(".step2").hide();
+            $(".wait").show();
+            server.signup(number, imageData, function() {
+                localStorage.setItem("number", number);
+                appsassin.switchView("main");
             });
         }
 
@@ -52,18 +90,17 @@ var appsassin = (function () {
             alert("Unable to retrieve photo: " + message);
         }
 
-        signup.init = function () {
-            $(".upload").bind("click", function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                navigator.camera.getPicture(cameraSuccess, cameraFail, {
-                    quality: 50,
-                    destinationType: Camera.DestinationType.DATA_URL
-                });
-            });
+        return signup;
+    })();
+
+    appsassin.main = (function () {
+        var main = {};
+
+        main.init = function () {
+            $(".wait").show();
         };
 
-        return signup;
+        return main;
     })();
 
     return appsassin;
