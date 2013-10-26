@@ -40,9 +40,7 @@ var learn = function(username, url) {
 
 var generatePictureUrl = function(host, id){
   return host + "/pictures/" + id; 
-}
-
-
+};
 
 
 exports.index = function(req, res){
@@ -109,7 +107,8 @@ exports.recognise = function(req, res) {
 
   console.log(url);
 
-  unirest.post('https://lambda-face-recognition.p.mashape.com/recognize')
+  unirest.post('https://lambda-face-recognition.p.mashape.com/recognize?album=' + album +
+    "&albumkey=" + albumkey)
     .headers({
       "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D" })
     .field("album", album)
