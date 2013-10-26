@@ -1,0 +1,39 @@
+{
+  "name": "appsassin",
+  "version": "0.0.1-9",
+  "private": true,
+  "scripts": {
+    "start": "app.js"
+  },
+  "dependencies": {
+    "express": "~3.3.4",
+    "jade": "~0.34.0",
+    "mongoose": "~3.6.14",
+    "express-restify-mongoose": "~0.3.3",
+<<<<<<< HEAD
+    "node-geonames": "0.0.11",
+    "underscore": "~1.5.2",
+    "request": "~2.27.0"
+=======
+    "unirest": "0.0.5"
+>>>>>>> 932f9d8b43a4ac4fd183b52311b1b981890e2f26
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-develop": "~0.1.1",
+    "grunt-contrib-watch": "~0.4.4",
+    "grunt-contrib-compass": "~0.2.0",
+    "request": "~2.22.0",
+    "time-grunt": "~0.1.1",
+    "load-grunt-tasks": "~0.2.0",
+    "grunt-mocha": "~0.4.1",
+    "grunt-lib-phantomjs": "~0.4.0"
+  },
+  "subdomain": "appsassin",
+  "domains": [
+    "appsass.in"
+  ],
+  "engines": {
+    "node": "0.10.x"
+  }
+}
