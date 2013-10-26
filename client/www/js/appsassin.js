@@ -8,7 +8,7 @@ var appsassin = (function () {
     };
 
     appsassin.switchView = function (viewName, elementId, additionalCallback) {
-        var fileName = appsassin.filePath + viewName + ".html";
+        var fileName = viewName + ".html";
         if (!elementId) {
             if (viewName === currentView) {
                 if (typeof (additionalCallback) == "function") {
@@ -18,7 +18,7 @@ var appsassin = (function () {
             }
             currentView = viewName;
             $("body").load(fileName, function() {
-                appsassin[viewName].init(elementId);
+                appsassin[viewName].init();
                 if (typeof (additionalCallback) == "function") {
                     additionalCallback();
                 }
@@ -42,8 +42,25 @@ var appsassin = (function () {
     appsassin.signup = (function () {
         var signup = {};
 
-        signup.init = function () {
+        function cameraSuccess(imageData) {
+            server.signup("07123456789", imageData, function() {
+                alert("success?");
+            });
+        }
 
+        function cameraFail(message) {
+            alert("Unable to retrieve photo: " + message);
+        }
+
+        signup.init = function () {
+            $(".upload").bind("click", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                navigator.camera.getPicture(cameraSuccess, cameraFail, {
+                    quality: 50,
+                    destinationType: Camera.DestinationType.DATA_URL
+                });
+            });
         };
 
         return signup;
