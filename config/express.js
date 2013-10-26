@@ -1,4 +1,6 @@
-var express = require('express');
+var express = require('express'),
+    restify = require('express-restify-mongoose'),
+    mongoose = require('mongoose');
 
 module.exports = function(app, config) {
   app.configure(function () {
@@ -11,6 +13,7 @@ module.exports = function(app, config) {
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
+    restify.serve(app,mongoose.model('User'));
     app.use(app.router);
     app.use(function(req, res) {
       res.status(404).render('404', { title: '404' });

@@ -12,7 +12,7 @@ db.on('error', function () {
 var modelsPath = __dirname + '/app/models';
 fs.readdirSync(modelsPath).forEach(function (file) {
   if (file.indexOf('.js') >= 0) {
-    require(modelsPath + '/' + file);
+    var model = require(modelsPath + '/' + file);
   }
 });
 
@@ -22,3 +22,4 @@ require('./config/express')(app, config);
 require('./config/routes')(app);
 
 app.listen(config.port);
+
