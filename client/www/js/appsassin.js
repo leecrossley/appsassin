@@ -43,7 +43,9 @@ var appsassin = (function () {
         var signup = {};
 
         function cameraSuccess(imageData) {
-            console.log(imageData);
+            server.signup("07123456789", imageData, function() {
+                alert("success?");
+            });
         }
 
         function cameraFail(message) {
