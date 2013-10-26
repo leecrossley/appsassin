@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         jasmine: {
             src: "src/server.js",
             options: {
-                specs: "spec/server.js"
+                specs: "spec/spec.js"
             }
         },
         uglify: {
