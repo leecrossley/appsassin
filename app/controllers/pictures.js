@@ -12,31 +12,24 @@ exports.index = function(req, res){
 };
 
 exports.show = function(req, res){
-  Picture.findOne({id: req.params['pictureId']}, function(err, picture){
-    if(err) throw new Error(err);
-    if (!picture)
-      return res.send('not found', 404);
+  var query = Picture.find({_id: req.params['id']});
 
-    console.log(picture); 
-
-    res.setHeader('Content-Type', 'image/jpeg');
-    res.setHeader('Content-Length', picture.encoded.length());
-    res.end(picture.encoded);
+  query.findOne(function (err, picture) {
+      if(err) throw new Error(err);
+      console.log(picture.encoded);
+      if (!picture)
+        return res.send('not found', 404);
+      var b64string = picture.encoded;
+      var buf = new Buffer(b64string, 'base64');
+      res.setHeader('Content-Type', 'image/jpeg');
+      // res.setHeader('Content-Length', picture.encoded.length()); 
+      res.end(buf);
   });
 };
 
 exports.add = function(req, res){
-  
-  console.log(req.params)
-  /*Picture.findOne({id: req.params['pictureId']}, function(err, picture){
-    if(err) throw new Error(err);
-    if (!picture)
-      return res.send('not found', 404);
-
-    console.log(picture); 
-
-    res.setHeader('Content-Type', 'image/jpeg');
-    res.setHeader('Content-Length', picture.encoded.length());
-    res.end(picture.encoded);
-  });*/
+  var picture = new Picture();
+  picture.encoded = req.body.encoded;
+  var id = picture.save();
+  res.end(id);
 };

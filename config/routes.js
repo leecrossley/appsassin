@@ -6,7 +6,7 @@ module.exports = function(app){
 	var pictures = require('../app/controllers/pictures');
 	app.post('/pictures/add', pictures.add);
 	app.get('/pictures', pictures.index);
-	app.get('/pictures/:pictureId', pictures.show);
+	app.get('/pictures/:id', pictures.show);
 
 	var user = require('../app/controllers/user');
     app.post('/user',user.create);
