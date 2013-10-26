@@ -13,22 +13,21 @@ var learn = function(username, url) {
 
   console.log("Posting to album_train, " + username);
 
-  // TODO: create game album if it doesn't exist
   var album = "appsassindefault";
   var albumkey = "ed742659aa2cedd19b075cfbd683d5e64a795fa50d867784e51ec60e82f44eb8";
 
   unirest.post('https://lambda-face-recognition.p.mashape.com/album_train')
     .headers({
       "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D" })
-    .send({ 
-      "album": album, 
-      "albumkey": albumkey,
-      "entryid": username,
-      "urls": url }
-      )
+    .field("album", album)
+    .field("albumkey", albumkey)
+    .field("entryid", username)
+    .field("urls", url)
     .end(function (response) {
-      // need to check that this succeeded ...
       console.log(response.body);
+      if (response.body.error){
+        console.log("there was an error sending picture for recog: " + response.body.error);
+      }
     });
 };
 
@@ -76,7 +75,7 @@ exports.newuser = function(req, res){
 
       user.defaultImage = picture.id;
       user.save();
-      
+
       learn(user.username, req.headers.host + "/pictures/" + picture.id);
   });
 };
