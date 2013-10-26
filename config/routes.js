@@ -9,7 +9,11 @@ module.exports = function(app){
 	app.get('/pictures/:id', pictures.show);
 
 	var user = require('../app/controllers/user');
-    app.post('/user',user.create);
-    app.get('/user:id',user.id);
+  app.post('/user',user.create);
+  app.get('/user:id',user.id);
+
+  var game = require('../app/controllers/game');
+  app.get('/api/v1/opengames',game.open);
+  app.post('/api/v1/joingame/:id',game.join);
 
 };
