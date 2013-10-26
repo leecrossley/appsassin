@@ -1,6 +1,6 @@
 {
   "name": "appsassin",
-  "version": "0.0.1",
+  "version": "0.0.1-1",
   "private": true,
   "scripts": {
     "start": "app.js"
@@ -18,5 +18,9 @@
     "request": "~2.22.0",
     "time-grunt": "~0.1.1",
     "load-grunt-tasks": "~0.2.0"
+  },
+  "subdomain": "appsassin",
+  "engines": {
+    "node": "0.10.x"
   }
 }
