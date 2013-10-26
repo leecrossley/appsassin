@@ -2,11 +2,19 @@
     -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
 
+@font-face {
+    font-family: "brfont";
+    font-style: normal;
+    font-weight: 400;
+    src: local("brfont"), url(brfont.woff) format("woff");
+}
+
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     background-color: #000;
+    color: #FFF;
     background-attachment: fixed;
     font-family: "HelveticaNeue-Light", "HelveticaNeue", Helvetica, Arial, sans-serif;
     font-size: 12px;
@@ -15,5 +23,9 @@ body {
     padding: 0px;
     text-transform: uppercase;
     width: 100%;
+}
+
+h1 {
+    font-family: "brfont";
 }
 
