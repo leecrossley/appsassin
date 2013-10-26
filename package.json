@@ -17,7 +17,9 @@
     "grunt-contrib-compass": "~0.2.0",
     "request": "~2.22.0",
     "time-grunt": "~0.1.1",
-    "load-grunt-tasks": "~0.2.0"
+    "load-grunt-tasks": "~0.2.0",
+    "grunt-mocha": "~0.4.1",
+    "grunt-lib-phantomjs": "~0.4.0"
   },
   "subdomain": "appsassin",
   "domains": [
