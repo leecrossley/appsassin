@@ -3,6 +3,7 @@ var appsassin = (function () {
         currentView,
         user;
 
+    // Called when the app is loaded
     appsassin.init = function () {
         overrideBackButton();
         user = localStorage.getItem("number");
@@ -13,6 +14,7 @@ var appsassin = (function () {
         }
     };
 
+    // Switches the HTML view
     appsassin.switchView = function (viewName, elementId, additionalCallback) {
         var fileName = viewName + ".html";
         if (!elementId) {
@@ -39,12 +41,14 @@ var appsassin = (function () {
         }
     };
 
+    // Stop the Android back button being problematic
     function overrideBackButton() {
         document.addEventListener("backbutton", function(e) {
             e.preventDefault();
         }, false);
     }
 
+    // Signup functionality
     appsassin.signup = (function () {
         var signup = {},
             number;
@@ -88,17 +92,42 @@ var appsassin = (function () {
 
         function cameraFail(message) {
             alert("Unable to retrieve photo: " + message);
+            $(".wait").hide();
+            $(".step2").show();
         }
 
         return signup;
     })();
 
+    // Main screen - checking for active games in location
     appsassin.main = (function () {
         var main = {};
 
         main.init = function () {
             $(".wait").show();
+            $(".submit").bind("click", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                main.init();
+            });
+            var options = {
+                maximumAge: 3000,
+                timeout: 5000,
+                enableHighAccuracy: true
+            };
+            navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, options);
         };
+
+        function geolocationSuccess(position) {
+            alert("Lat: " + position.coords.latitude);
+            alert("Long: " + position.coords.longitude);
+        }
+
+        function geolocationError(message) {
+            alert("Unable to retrieve location: " + message);
+            $(".wait").hide();
+            $(".check").show();
+        }
 
         return main;
     })();
