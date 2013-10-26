@@ -1,0 +1,1 @@
+# appsassin [![Build Status](https://travis-ci.org/leecrossley/appsassin.png?branch=master)](https://travis-ci.org/leecrossley/appsassin)
