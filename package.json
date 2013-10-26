@@ -1,29 +1,26 @@
 {
-  "name": "appsassin-server",
-  "description": "#HackManchester",
-  "homepage": "http://appsass.in",
-  "version": "0.0.1",
-  "main": "src/server.min.js",
+  "name": "appsassin",
+  "version": "0.0.1-1",
+  "private": true,
   "scripts": {
-    "test": "grunt test"
+    "start": "app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:leecrossley/appsassin.git"
-  },
-  "engines": {
-    "node": ">= 0.8.x"
+  "dependencies": {
+    "express": "~3.3.4",
+    "jade": "~0.34.0",
+    "mongoose": "~3.6.14"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-shell": "~0.5.x",
-    "grunt-contrib-watch": "~0.5.x",
-    "grunt-contrib-jshint": "~0.6.x",
-    "grunt-contrib-jasmine": "~0.5.x",
-    "grunt-contrib-uglify": "~0.2.x",
-    "grunt-cli": "~0.1.x"
+    "grunt-develop": "~0.1.1",
+    "grunt-contrib-watch": "~0.4.4",
+    "grunt-contrib-compass": "~0.2.0",
+    "request": "~2.22.0",
+    "time-grunt": "~0.1.1",
+    "load-grunt-tasks": "~0.2.0"
   },
-  "dependencies": {
-    "functional.js": "~0.2.3"
+  "subdomain": "appsassin",
+  "engines": {
+    "node": "0.10.x"
   }
 }
