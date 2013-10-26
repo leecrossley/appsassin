@@ -2,6 +2,8 @@ var express = require('express'),
     restify = require('express-restify-mongoose'),
     mongoose = require('mongoose');
 
+var pictures = require('../app/controllers/pictures');
+
 module.exports = function(app, config) {
   app.configure(function () {
     app.use(express.compress());
@@ -13,7 +15,7 @@ module.exports = function(app, config) {
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    restify.serve(app,mongoose.model('User'));
+    restify.serve(app,mongoose.model('User'), { postProcess: pictures.newuser });
     restify.serve(app,mongoose.model('Game'));
     app.use(app.router);
     app.use(function(req, res) {

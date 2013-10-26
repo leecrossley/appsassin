@@ -1,5 +1,36 @@
 var mongoose = require('mongoose'),
-  Picture = mongoose.model('Picture');
+  Picture = mongoose.model('Picture'),
+  User = mongoose.model('User'),
+  unirest = require('unirest');
+
+var createPicture = function(encoded) {
+  var picture = new Picture();
+  picture.encoded = encoded;
+  return picture;
+};
+
+var learn = function(username, url) {
+
+  console.log("Posting to album_train, " + username);
+
+  // TODO: create game album if it doesn't exist
+  var album = "appsassindefault";
+  var albumkey = "ed742659aa2cedd19b075cfbd683d5e64a795fa50d867784e51ec60e82f44eb8";
+
+  unirest.post('https://lambda-face-recognition.p.mashape.com/album_train')
+    .headers({
+      "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D" })
+    .send({ 
+      "album": album, 
+      "albumkey": albumkey,
+      "entryid": username,
+      "urls": url }
+      )
+    .end(function (response) {
+      // need to check that this succeeded ...
+      console.log(response.body);
+    });
+};
 
 exports.index = function(req, res){
   Picture.find(function(err, pictures){
@@ -22,14 +53,31 @@ exports.show = function(req, res){
       var b64string = picture.encoded;
       var buf = new Buffer(b64string, 'base64');
       res.setHeader('Content-Type', 'image/jpeg');
-      // res.setHeader('Content-Length', picture.encoded.length()); 
       res.end(buf);
   });
 };
 
 exports.add = function(req, res){
-  var picture = new Picture();
-  picture.encoded = req.body.encoded;
-  var id = picture.save();
-  res.end(id);
+  var picture = createPicture(req.body.encoded);
+  picture.save();
+  res.end(picture);
 };
+
+exports.newuser = function(req, res){
+
+  console.log("Adding new picture for new user...");
+
+  var query = User.find({ username: req.body.username });
+  query.findOne(function (err, user) {
+      if(err) throw new Error(err);
+      
+      var picture = createPicture(req.body.defaultImage);
+      picture.save();
+
+      user.defaultImage = picture.id;
+      user.save();
+      
+      learn(user.username, req.headers.host + "/pictures/" + picture.id);
+  });
+};
+
