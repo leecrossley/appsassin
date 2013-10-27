@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     _ = require('underscore'),
     request = require('request'),
+    Picture = require('../models/picture'),
     Schema = mongoose.Schema;
 
 var GameSchema = new Schema({
@@ -16,7 +17,10 @@ var GameSchema = new Schema({
         default: "open"
     },
     players: [{
-      user: {type:Schema.Types.ObjectId,required:true},
+        user: {
+            type: Schema.Types.ObjectId,
+            required: true
+        },
         pseudonym: String
     }],
     missions: [{
@@ -41,12 +45,28 @@ var GameSchema = new Schema({
     }]
 });
 
+
+var generatePictureUrl = function(host, id) {
+        return host + "/pictures/" + id;
+    };
+var createPictureTarget = function(encoded) {
+        var picture = createPicture(encoded);
+        picture.isTarget = true;
+        return picture;
+    };
+
+var createPicture = function(encoded) {
+        var picture = new Picture();
+        picture.encoded = encoded;
+        return picture;
+    };
+
 GameSchema.methods.addPlayer = function(userid, continuation) {
     var game = this;
     request("http://namey.muffinlabs.com/name.json?count=1&with_surname=true", function(error, response, body) {
         if (game.requiredPlayers <= game.requiredPlayers.length) return;
         if (!(game.players.length !== 0 && _.find(game.players, function(p) {
-            if(!p.user) return;
+            if (!p.user) return;
             return p.user.equals(userid);
         }))) {
             game.players.push({
@@ -81,20 +101,17 @@ GameSchema.methods.startIfFull = function() {
     }
 };
 
-GameSchema.methods.poshEliminate = function(victim,picture,callback)
-{
+GameSchema.methods.poshEliminate = function(host, victim, picture, callback) {
 
     var picture = createPictureTarget(picture);
     picture.save(function() {
 
-        var url = generatePictureUrl(req.headers.host, picture.id);
-
-        console.log("Trying to recognise player via url: " + url);
+        var url = generatePictureUrl(host, picture.id);
 
         var album = "appsassin2";
         var albumkey = "533e6074bc68a3e207f78b4ce6851a3b37e7466ffb34a9e8b60888d527707c70";
 
-
+        var game = this;
         request.post({
             url: 'https://lambda-face-recognition.p.mashape.com/recognize?album=' + album + "&albumkey=" + albumkey,
             headers: {
@@ -109,25 +126,28 @@ GameSchema.methods.poshEliminate = function(victim,picture,callback)
             console.log(body);
             if (error) {
                 console.log("there was an error sending picture for recog: " + response.body.error);
-                // TODO: return matches ...
-            }
-            
+            };
+            var photo = _.find(JSON.parse(body).photos, function(p) {
+                return p.uids[0].prediction == victim.username;
+            });
+            callback(photo);
         });
     });
 }
 
+
 GameSchema.methods.findVictim = function(userId) {
-  console.log("Find victim for user: " + userId);
-  return _.find(this.missions.reverse(), function(m) {
-    return m.assassin.equals(userId);
-  });
+    console.log("Find victim for user: " + userId);
+    return _.find(this.missions.reverse(), function(m) {
+        return m.assassin.equals(userId);
+    });
 };
 
 GameSchema.methods.findAssassin = function(userId) {
-  console.log("Find assassin for user: " + userId);
-  return _.find(this.missions.reverse(), function(m) {
-    return m.victim.equals(userId);
-  });
+    console.log("Find assassin for user: " + userId);
+    return _.find(this.missions.reverse(), function(m) {
+        return m.victim.equals(userId);
+    });
 };
 
 
@@ -142,8 +162,7 @@ GameSchema.methods.eliminate = function(user) {
     });
 
 
-    if(!(am || vm))
-      return;
+    if (!(am || vm)) return;
 
     this.kills.push({
         assassin: user,

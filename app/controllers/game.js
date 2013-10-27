@@ -29,7 +29,7 @@ exports.eliminate = function(req, res) {
 
 exports.eliminatebyimage = function(req, res) {
     Game.findById(req.params.id, function(error, game) {
-        game.poshEliminate(req.body.user, req.body.picture, function(photo) {
+        game.poshEliminate(req.headers.host,req.body.user, req.body.picture, function(photo) {
             if (!photo) {
                 res.json({
                     status: 'missed'

@@ -7,4 +7,4 @@ var PictureSchema = new Schema({
   potentialTarget: {type:Boolean,default:false}
 });
 
-mongoose.model('Picture', PictureSchema);
+module.exports = mongoose.model('Picture', PictureSchema);
