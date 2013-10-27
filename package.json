@@ -13,7 +13,9 @@
     "unirest": "0.0.5",
     "node-geonames": "0.0.11",
     "underscore": "~1.5.2",
-    "request": "~2.27.0"
+    "request": "~2.27.0",
+    "xmlbuilder": "0.3.x",
+    "xml2js": "0.1.x"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

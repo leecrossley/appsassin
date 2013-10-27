@@ -82,6 +82,20 @@ GameSchema.methods.startIfFull = function() {
     }
 };
 
+GameSchema.methods.findVictim = function(userId) {
+  console.log("Find victim for user: " + userId);
+  return _.find(this.missions.reverse(), function(m) {
+    return m.assassin.equals(userId);
+  });
+};
+
+GameSchema.methods.findAssassin = function(userId) {
+  console.log("Find assassin for user: " + userId);
+  return _.find(this.missions.reverse(), function(m) {
+    return m.victim.equals(userId);
+  });
+};
+
 GameSchema.methods.eliminate = function(user) {
     console.log("eliminate " + user);
   

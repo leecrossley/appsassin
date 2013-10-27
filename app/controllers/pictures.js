@@ -76,7 +76,10 @@ exports.add = function(req, res){
 
 exports.newuser = function(req, res){
 
-  console.log("Adding new picture for new user...");
+  if(!req.body.username)
+    return;
+
+  console.log("Adding new picture for new user: " + req.body.username);
 
   var query = User.find()
     .where('username').eq(req.body.username);
