@@ -66,13 +66,13 @@ var server = (function () {
         doPost("/location/track", data, callback);
     };
 
-    server.eliminateTarget = function (user, photo, callback) {
-        console.log("killing...");
+    server.shootTarget = function (user, photo, gameId, callback) {
+        console.log("shooting...");
         var data = {
-            "username": user,
-            "image": photo
+            "user": user,
+            "picture": photo
         };
-        doPost("/eliminate", data, callback);
+        doPost("/shoot/" + gameId, data, callback);
     };
 
     return server;
