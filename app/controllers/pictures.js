@@ -1,7 +1,8 @@
 var mongoose = require('mongoose'),
     Picture = mongoose.model('Picture'),
     User = mongoose.model('User'),
-    unirest = require('unirest');
+    unirest = require('unirest'),
+    request = require('request');
 
 
 var createPictureTarget = function(encoded) {
@@ -23,12 +24,21 @@ var learn = function(username, url) {
         var album = "appsassindefault";
         var albumkey = "ed742659aa2cedd19b075cfbd683d5e64a795fa50d867784e51ec60e82f44eb8";
 
-        unirest.post('https://lambda-face-recognition.p.mashape.com/album_train').headers({
-            "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D"
-        }).field("album", album).field("albumkey", albumkey).field("entryid", username).field("urls", url).end(function(response) {
-            console.log(response.body);
-            if (response.body.error) {
-                console.log("there was an error sending picture for recog: " + response.body.error);
+        request.post({
+            url: 'https://lambda-face-recognition.p.mashape.com/album_train',
+            headers: {
+                "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D"
+            },
+            form: {
+                "album": album,
+                "albumkey": albumkey,
+                "entryid": username,
+                "urls": url
+            }
+        }, function(error, response, body) {
+            console.log(body);
+            if (error) {
+                console.log("there was an error sending picture for recog: " + error);
             }
         });
     };
@@ -49,11 +59,7 @@ exports.index = function(req, res) {
 };
 
 exports.show = function(req, res) {
-    var query = Picture.find({
-        _id: req.params['id']
-    });
-
-    query.findOne(function(err, picture) {
+    Picture.findById(req.params.id, function(err, picture) {
         if (err) throw new Error(err);
         console.log(picture.encoded);
         if (!picture) return res.send('not found', 404);
@@ -93,28 +99,36 @@ exports.recognise = function(req, res) {
     console.log("Recognise player ...");
 
     var picture = createPictureTarget(req.body.defaultImage);
-    picture.save();
+    picture.save(function() {
 
-    var url = generatePictureUrl(req.headers.host, picture.id);
+        var url = generatePictureUrl(req.headers.host, picture.id);
 
-    console.log("Trying to recognise player via url: " + url);
+        console.log("Trying to recognise player via url: " + url);
 
-    var album = "appsassindefault";
-    var albumkey = "ed742659aa2cedd19b075cfbd683d5e64a795fa50d867784e51ec60e82f44eb8";
+        var album = "appsassindefault";
+        var albumkey = "ed742659aa2cedd19b075cfbd683d5e64a795fa50d867784e51ec60e82f44eb8";
 
-    console.log(url);
 
-    unirest.post('https://lambda-face-recognition.p.mashape.com/recognize?album=' + album + "&albumkey=" + albumkey).headers({
-        "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D",
-        "Content-Length":0
-    }).field("album", album).field("albumkey", albumkey).field("urls", url).end(function(response) {
-        console.log(response.body);
-        if (response.body.error) {
-            console.log("there was an error sending picture for recog: " + response.body.error);
-            // TODO: return matches ...
-        }
-        console.log(response.body);
-        res.json(response.body);
+        request.post({
+            url: 'https://lambda-face-recognition.p.mashape.com/recognize?album=' + album + "&albumkey=" + albumkey,
+            headers: {
+                "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D"
+            },
+            form: {
+                "album": album,
+                "albumkey": albumkey,
+                "urls": url
+            }
+        }, function(error, response, body) {
+            console.log(body);
+            if (error) {
+                console.log("there was an error sending picture for recog: " + response.body.error);
+                // TODO: return matches ...
+            }
+            console.log(body);
+            res.json(body);
+
+        });
     });
 };
 
