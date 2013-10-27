@@ -43,7 +43,7 @@ var server = (function () {
     };
 
     server.joinGame = function (gameId, userId, callback) {
-        console.log("joining game " + gameId + "...");
+        console.log("joining game " + gameId + " with user " + userId + "...");
         var data = {
             "id": userId
         };
@@ -56,7 +56,7 @@ var server = (function () {
     };
 
     server.sendLocation = function (gameId, userId, lng, lat, callback) {
-        console.log("sending location...");
+        console.log("sending location for game " + gameId + " and user " + userId + "...");
         var data = {
             "gameId": gameId,
             "userId": userId,
