@@ -16,28 +16,19 @@ var appsassin = (function () {
     };
 
     // Switches the HTML view
-    appsassin.switchView = function (viewName, elementId, additionalCallback) {
+    appsassin.switchView = function (viewName, elementId) {
         var fileName = viewName + ".html";
         if (!elementId) {
             if (viewName === currentView) {
-                if (typeof (additionalCallback) == "function") {
-                    additionalCallback();
-                }
                 return;
             }
             currentView = viewName;
             $("body").load(fileName, function() {
                 appsassin[viewName].init();
-                if (typeof (additionalCallback) == "function") {
-                    additionalCallback();
-                }
             });
         } else {
             $("#" + elementId).load(fileName, function() {
                 appsassin[viewName].init(elementId);
-                if (typeof (additionalCallback) == "function") {
-                    additionalCallback();
-                }
             });
         }
     };
@@ -117,7 +108,7 @@ var appsassin = (function () {
             });
             var options = {
                 maximumAge: 3000,
-                timeout: 5000,
+                timeout: 30000,
                 enableHighAccuracy: true
             };
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, options);
@@ -141,13 +132,19 @@ var appsassin = (function () {
 
         // Waiting for other players
         function otherPlayers(game) {
-            console.log(game);
-            $(".wait").hide();
-            $(".others").show();
+            if (game.status === "open") {
+                $(".wait").hide();
+                $(".others").show();
+                setTimeout(function() {
+                    server.getGame(game._id, otherPlayers);
+                }, 5000);
+            } else {
+                appsassin.switchView("game");
+            }
         }
 
-        function geolocationError(message) {
-            alert("Unable to retrieve location: " + message);
+        function geolocationError(error) {
+            alert("Unable to retrieve location: " + error.message);
             $(".wait").hide();
             $(".check").show();
         }

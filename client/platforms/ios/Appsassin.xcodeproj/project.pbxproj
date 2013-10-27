@@ -36,6 +36,7 @@
 		90392AAA56444D32BAA66051 /* ImageIO.framework in Resources */ = {isa = PBXBuildFile; fileRef = E11AA552B2794960BF68C4A6 /* ImageIO.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8A0296E1D0DC49A9AEEAF3DF /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D0F3C48A2D4909A9775D9A /* CDVLogger.m */; };
 		A3AA08B9AAD24A2AA22AE5C5 /* CDVLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E0B7F0F11924106B7C0F83B /* CDVLocation.m */; };
+		237B33B2B43F48498428AC4A /* CDVDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 154468C1E6F54142A3D6D6D9 /* CDVDevice.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,8 @@
 		F822FDBC829C41E18F0DCC97 /* CDVLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVLogger.h"; path = "org.apache.cordova.console/CDVLogger.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		1E0B7F0F11924106B7C0F83B /* CDVLocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVLocation.m"; path = "org.apache.cordova.geolocation/CDVLocation.m"; sourceTree = "<group>"; fileEncoding = 4; };
 		CBF56717811448DFB26232C4 /* CDVLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVLocation.h"; path = "org.apache.cordova.geolocation/CDVLocation.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		154468C1E6F54142A3D6D6D9 /* CDVDevice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVDevice.m"; path = "org.apache.cordova.device/CDVDevice.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		B1F8DAD768F14196B2B44DF6 /* CDVDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVDevice.h"; path = "org.apache.cordova.device/CDVDevice.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +229,8 @@
 				F822FDBC829C41E18F0DCC97 /* CDVLogger.h */,
 				1E0B7F0F11924106B7C0F83B /* CDVLocation.m */,
 				CBF56717811448DFB26232C4 /* CDVLocation.h */,
+				154468C1E6F54142A3D6D6D9 /* CDVDevice.m */,
+				B1F8DAD768F14196B2B44DF6 /* CDVDevice.h */,
 			);
 			name = Plugins;
 			path = "Appsassin/Plugins";
@@ -397,6 +402,7 @@
 				95F075A0AD0D4935A76CC552 /* CDVJpegHeaderWriter.m in Sources */,
 				8A0296E1D0DC49A9AEEAF3DF /* CDVLogger.m in Sources */,
 				A3AA08B9AAD24A2AA22AE5C5 /* CDVLocation.m in Sources */,
+				237B33B2B43F48498428AC4A /* CDVDevice.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
