@@ -17,6 +17,7 @@ module.exports = function(app, config) {
     app.use(express.methodOverride());
     restify.serve(app,mongoose.model('User'), { postProcess: pictures.newuser });
     restify.serve(app,mongoose.model('Game'));
+    restify.serve(app,mongoose.model('Location'));
     app.use(app.router);
     app.use(function(req, res) {
       res.status(404).render('404', { title: '404' });
