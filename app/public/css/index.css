@@ -1,0 +1,181 @@
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+@font-face {
+    font-family: "brfont";
+    font-style: normal;
+    font-weight: 400;
+    src: local("brfont"), url(brfont.woff) format("woff");
+    src: local("brfont"), url("brfont.ttf") format("truetype");
+}
+
+body {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    background-color: #000;
+    background-image: url("../img/back2.jpg");
+    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: center;
+    color: #FFF;
+    background-attachment: fixed;
+    font-family: "HelveticaNeue-Light", "HelveticaNeue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+}
+
+.ios7 header {
+    border-top: 20px solid #B60101;
+}
+
+header {
+    background-color: #B60101;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    zoom: 1;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    height: 44px;
+    overflow: hidden;
+}
+
+header h1 {
+    color: #FFF;
+    font-weight: normal;
+    min-height: 44px;
+    line-height: 44px;
+    text-align: center;
+    font-size: 30px;
+    display: block;
+    margin: 2px 50px;
+    padding: 0;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    overflow: hidden;
+    white-space: nowrap;
+    zoom: 1;
+    outline: 0 !important;
+    font-family: "brfont";
+}
+
+div.container {
+    margin: 15px;
+}
+
+div.container h3 {
+    margin: 50px 0;
+    text-align: center;
+    font-size: 16px;
+}
+
+.map {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+div.olControlZoom {
+    display: none!important;
+}
+
+div.olMapViewport {
+    -ms-touch-action: none;
+}
+
+.olLayerGrid .olTileImage {
+    -webkit-transition: opacity 0.2s linear;
+    -moz-transition: opacity 0.2s linear;
+    -o-transition: opacity 0.2s linear;
+    transition: opacity 0.2s linear;
+}
+
+.olTileImage {
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    -moz-perspective: 1000;
+    -ms-perspective: 1000;
+    perspective: 1000;
+}
+
+button {
+    font-family: "brfont";
+    display: block;
+    padding: 0.5em 1em;
+    font-size: 2em;
+    text-transform: uppercase;
+    border-radius: .3em;
+    border: 1px solid black;
+    background-color: #000;
+    background-image: url("../img/button.jpg");
+    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: center;
+    /*box-shadow: inset 0 .1em rgba(255,255,255,0.1), 0 .1em .1em black, 0 0.2em rgba(255,255,255,0.1), 0 0 0 .2em rgba(0,0,0,0.1);*/
+    color: #B60101;
+    margin: 75px auto;
+}
+
+button:hover {
+    text-shadow: 0 0 .3em #B60101;
+}
+
+button:active {
+    text-shadow: 0 0 .3em #B60101;
+    top: 0.1em;
+    /*box-shadow: inset 0 .1em rgba(255,255,255,0.1), 0 0.1em rgba(255,255,255,0.1), 0 -0.1em 0 .2em rgba(0,0,0,0.1);*/
+}
+
+input {
+    display: block;
+    font-size: 14px;
+    width: 240px;
+    margin: 25px auto;
+    padding: 10px 8px 10px 8px;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0, .55), 0px 1px 1px rgba(255,255,255,.5);
+    border: 1px solid #666;
+    opacity: 0.5;
+}
+
+input:hover,
+input:focus {
+    opacity: 0.8;
+    color: #B60101;
+    font-weight: bold;
+    box-shadow: inset 0 1px 2px rgba(255,255,255, .35), 0px 1px 15px rgba(0,246,255,.5);
+    border: 1px solid #B60101;
+    outline: none;
+}
+
+footer {
+    z-index: 1000;
+    height: 44px;
+    width: 100%;
+    overflow: hidden;
+    background: transparent url("../img/footer.jpg");
+    background-size: cover;
+    background-position: right;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+footer button {
+    margin: 2px;
+    padding: 0.24em 1em;
+}
