@@ -18,4 +18,6 @@ module.exports = function(app){
   app.post('/api/v1/joingame/:id',game.join);
   app.post('/api/v1/eliminate/:id',game.eliminate);
 
+  var location = require('../app/controllers/location');
+  app.post('/api/v1/location/track', location.track)
 };

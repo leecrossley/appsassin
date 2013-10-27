@@ -1,9 +1,8 @@
 h1
-  pictures
+  Pictures
 
 ul
   each item in pictures
     li
       img(src="data:image/jpeg;base64," + item.encoded)
       div=item._id
-      div=item.encoded
