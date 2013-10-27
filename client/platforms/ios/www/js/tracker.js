@@ -1,16 +1,13 @@
 var Tracker = Tracker || {};
 (function () {
     Tracker.Map = function (opt) {
-        var resize, options, self, game, user;
+        var resize, options, self;
 
         if (!(this instanceof Tracker.Map)) {
             return new Tracker.Map(opt);
         }
 
         options = opt || {};
-
-        game = options.game;
-        user = options.user;
 
         this.map = new OpenLayers.Map({
             div: options.element || "map",
@@ -37,7 +34,7 @@ var Tracker = Tracker || {};
         self = this;
 
         this.watchedPosition = function (position) {
-            server.sendLocation(game, user, position.coords.longitude, position.coords.latitude, targetPosition);
+            server.sendLocation(appsassin.currentGame._id, appsassin.userId, position.coords.longitude, position.coords.latitude, targetPosition);
             var point = new OpenLayers.Geometry.Point(position.coords.longitude, position.coords.latitude)
                 .transform(new OpenLayers.Projection("EPSG:4326"), self.map.getProjectionObject());
 
