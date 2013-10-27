@@ -16,8 +16,6 @@ var sendSms = function(message, phoneNumber) {
 
   smslock.add(phoneNumber);
 
-  var phoneNumber = "07944166597";
-
   phoneNumber = (phoneNumber.charAt(0) === "0") ? 
     phoneNumber.replace("0", "44") : phoneNumber;
   

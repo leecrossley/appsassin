@@ -29,20 +29,22 @@ exports.eliminate = function(req, res) {
 
 exports.eliminatebyimage = function(req, res) {
     Game.findById(req.params.id, function(error, game) {
-        game.poshEliminate(req.body.user, req.body.picture, function(photo) {
-            if (!photo) {
+        game.poshEliminate(req.headers.host, req.body.user, req.body.picture, function(photo) {
+            console.log(photo);
+            if (!photo || !photo.uids) {
                 res.json({
                     status: 'missed'
                 });
-            }
-            var user = User.find().where('username').equals(photo.uids[0].prediction).exec(function() {
-                game.eliminate(user._id);
-            });
+            } else {
+                var user = User.find().where('username').equals(photo.uids[0].prediction).exec(function() {
+                    game.eliminate(user._id);
+                });
 
-            res.json({
-                status: 'hit',
-                photo: photo
-            });
+                res.json({
+                    status: 'hit',
+                    photo: photo
+                });
+            }
         });
     });
 };
