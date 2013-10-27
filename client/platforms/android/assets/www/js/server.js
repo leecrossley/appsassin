@@ -67,7 +67,7 @@ var server = (function () {
     };
 
     server.shootTarget = function (user, photo, gameId, callback) {
-        console.log("shooting...");
+        console.log("shooting for user" + user + "...");
         var data = {
             "user": user,
             "picture": photo

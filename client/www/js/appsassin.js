@@ -242,7 +242,7 @@ var appsassin = (function () {
 
         // Shot data captured
         function cameraSuccess(imageData) {
-            server.shootTarget(appsassin.user, imageData, appsassin.currentGame._id, shotResult);
+            server.shootTarget(appsassin.userId, imageData, appsassin.currentGame._id, shotResult);
         }
 
         // The result of the shot from the server (hit / miss, based on image recognition)
@@ -281,7 +281,7 @@ var appsassin = (function () {
             $(".reset").bind("click", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                appsassin.init();
+                appsassin.switchView("main");
             });
             localStorage.setItem("game", null);
             appsassin.currentGame = null;
