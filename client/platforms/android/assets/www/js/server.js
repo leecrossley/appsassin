@@ -43,11 +43,27 @@ var server = (function () {
     };
 
     server.joinGame = function (gameId, userId, callback) {
-        console.log("joining game...");
+        console.log("joining game " + gameId + "...");
         var data = {
             "id": userId
         };
         doPost("/joingame/" + gameId, data, callback);
+    };
+
+    server.getGame = function (gameId, callback) {
+        console.log("getting game " + gameId + "...");
+        doGet("/games/" + gameId, callback);
+    };
+
+    server.sendLocation = function (gameId, userId, lng, lat, callback) {
+        console.log("sending location...");
+        var data = {
+            "gameId": gameId,
+            "userId": userId,
+            "lng": lng,
+            "lat": lat
+        };
+        doPost("/location/track", data, callback);
     };
 
     return server;

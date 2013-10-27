@@ -4,6 +4,7 @@ module.exports = function(app){
   app.get('/', home.index);
 
   var pictures = require('../app/controllers/pictures');
+  app.post('/recognise',pictures.recognise);
   app.post('/pictures/add', pictures.add);
   app.get('/pictures', pictures.index);
   app.get('/pictures/:id', pictures.show);
