@@ -15,5 +15,6 @@ module.exports = function(app){
   var game = require('../app/controllers/game');
   app.get('/api/v1/opengames',game.open);
   app.post('/api/v1/joingame/:id',game.join);
+  app.post('/api/v1/eliminate/:id',game.eliminate);
 
 };
