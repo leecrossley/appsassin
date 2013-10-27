@@ -111,9 +111,9 @@ GameSchema.methods.poshEliminate = function(victim,picture,callback)
                 console.log("there was an error sending picture for recog: " + response.body.error);
                 // TODO: return matches ...
             }
-            console.log(body);
             
         });
+    });
 }
 
 GameSchema.methods.findVictim = function(userId) {
