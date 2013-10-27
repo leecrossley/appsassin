@@ -7,6 +7,7 @@
     font-style: normal;
     font-weight: 400;
     src: local("brfont"), url(brfont.woff) format("woff");
+    src: local("brfont"), url("brfont.ttf") format("truetype");
 }
 
 body {
@@ -25,6 +26,10 @@ body {
     width: 100%;
 }
 
+.ios7 header {
+    border-top: 20px solid #E41B17;
+}
+
 h1 {
     font-family: "brfont";
 }
@@ -36,60 +41,20 @@ h1 {
 }
 
 div.olControlZoom {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(255,255,255,0.4);
-    border-radius: 4px;
-    padding: 2px;
+    display: none!important;
 }
-* {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-div.olControlZoom a {
-    display: block;
-    margin: 1px;
-    padding: 0;
-    color: white;
-    font-size: 28px;
-    font-family: sans-serif;
-    font-weight: bold;
-    text-decoration: none;
-    text-align: center;
-    height: 32px;
-    width: 32px;
-    line-height: 28px;
-    text-shadow: 0 0 3px rgba(0,0,0,0.8);
-    background: #130085; /* fallback for IE - IE6 requires background shorthand*/
-    background: rgba(0, 60, 136, 0.5);
-    filter: alpha(opacity=80);
-}
-a.olControlZoomIn {
-    border-radius: 4px 4px 0 0;
-}
-a.olControlZoomOut {
-    border-radius: 0 0 4px 4px;
-}
-div.olControlZoom a:hover {
-    background: #130085; /* fallback for IE */
-    background: rgba(0, 60, 136, 0.7);
-    filter: alpha(opacity=100);
-}
-@media only screen and (max-width: 600px) {
-    div.olControlZoom a:hover {
-        background: rgba(0, 60, 136, 0.5);
-    }
-}
+
 div.olMapViewport {
     -ms-touch-action: none;
 }
+
 .olLayerGrid .olTileImage {
     -webkit-transition: opacity 0.2s linear;
     -moz-transition: opacity 0.2s linear;
     -o-transition: opacity 0.2s linear;
     transition: opacity 0.2s linear;
 }
-/* Turn on GPU support where available */
+
 .olTileImage {
     -webkit-transform: translateZ(0);
     -moz-transform: translateZ(0);

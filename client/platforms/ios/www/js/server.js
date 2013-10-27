@@ -50,5 +50,9 @@ var server = (function () {
         doPost("/joingame/" + gameId, data, callback);
     };
 
+    server.getGame = function (gameId, callback) {
+        doGet("/games/" + gameId, callback);
+    };
+
     return server;
 })();

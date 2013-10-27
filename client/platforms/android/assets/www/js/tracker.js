@@ -1,7 +1,7 @@
 var Tracker = Tracker || {};
 (function () {
     Tracker.Map = function (opt) {
-        var resize, options, self;
+        var resize, options, self, poll = true;
 
         if (!(this instanceof Tracker.Map)) {
             return new Tracker.Map(opt);
@@ -40,22 +40,22 @@ var Tracker = Tracker || {};
             self.drawMyMarker(point);
             self.map.zoomToExtent(self.vector.getDataExtent());
         };
-    }
+    };
 
     Tracker.Map.prototype.watchPosition = function () {
         var options = {
             maximumAge: 3000,
-            timeout: 5000,
+            timeout: 30000,
             enableHighAccuracy: true
         };
         this.watchId = navigator.geolocation.watchPosition(this.watchedPosition, function(e) {
             console.log(e);
         }, options);
-    }
+    };
 
     Tracker.Map.prototype.clearWatch = function () {
         navigator.geolocation.clearWatch(this.watchId);
-    }
+    };
 
     Tracker.Map.prototype.drawMyMarker = function (point) {
         if (this.myCurrentVector) {
@@ -74,7 +74,7 @@ var Tracker = Tracker || {};
             }
         );
         this.vector.addFeatures(this.myCurrentVector);
-    }
+    };
 
     Tracker.Map.prototype.drawTargetMarker = function (point) {
         if (this.myTargetVector) {
@@ -93,5 +93,6 @@ var Tracker = Tracker || {};
             }
         );
         this.vector.addFeatures(this.myTargetVector);
-    }
+    };
+
 }());
