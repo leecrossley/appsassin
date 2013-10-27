@@ -6,10 +6,12 @@ var server = (function () {
         $.ajax({
             type: "POST",
             url: serverUrl + route,
-            data: data
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(data)
         })
         .fail(function(err) {
-            throw JSON.stringify(err);
+            console.log(err);
         })
         .always(callback);
     }
@@ -23,11 +25,29 @@ var server = (function () {
     }
 
     server.signup = function (number, photo, callback) {
+        console.log("signing up...");
         var data = {
             "username": number,
             "defaultImage": photo
         };
-        doPost("/user", data, callback);
+        doPost("/Users", data, callback);
+    };
+
+    server.getLocalGames = function (lat, lng, callback) {
+        console.log("getting games...");
+        /*var data = {
+            "lat": lat,
+            "long": lng
+        };*/
+        doGet("/opengames", callback);
+    };
+
+    server.joinGame = function (gameId, userId, callback) {
+        console.log("joining game...");
+        var data = {
+            "id": userId
+        };
+        doPost("/joingame/" + gameId, data, callback);
     };
 
     return server;

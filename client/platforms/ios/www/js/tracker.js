@@ -34,40 +34,10 @@ var Tracker = Tracker || {};
         self = this;
 
         this.watchedPosition = function (position) {
-            var point, circle;
+            var point = new OpenLayers.Geometry.Point(position.coords.longitude, position.coords.latitude)
+                .transform(new OpenLayers.Projection("EPSG:4326"), self.map.getProjectionObject());
 
-            point = new OpenLayers.Geometry.Point(position.coords.longitude, position.coords.latitude)
-                .transform(
-                    new OpenLayers.Projection("EPSG:4326"),
-                    self.map.getProjectionObject()
-                );
-
-            self.drawMarker(point);
-
-            if (options.accuracy) {
-                circle = new OpenLayers.Feature.Vector(
-                    OpenLayers.Geometry.Polygon.createRegularPolygon(
-                        point,
-                        position.coords.accuracy / 2,
-                        40,
-                        0
-                    ),
-                    {},
-                    {
-                        fillColor: "#AFEEEE",
-                        fillOpacity: 0.3,
-                        strokeWidth: 2,
-                        strokeColor: "#0EE"
-                    }
-                );
-
-                self.vector.addFeatures(circle);
-            }
-
-            if (options.radius) {
-                self.drawGeoFence(options.origin, options.radius, options.sides);
-            }
-
+            self.drawMyMarker(point);
             self.map.zoomToExtent(self.vector.getDataExtent());
         };
     }
@@ -79,65 +49,49 @@ var Tracker = Tracker || {};
             enableHighAccuracy: true
         };
         this.watchId = navigator.geolocation.watchPosition(this.watchedPosition, function(e) {
-            console.log(e) }, options);
+            console.log(e);
+        }, options);
     }
 
     Tracker.Map.prototype.clearWatch = function () {
         navigator.geolocation.clearWatch(this.watchId);
     }
 
-    Tracker.Map.prototype.drawMarker = function (point) {
-        this.vector.addFeatures(
-            new OpenLayers.Feature.Vector(
-                point,
-                {},
-                {
-                    strokeColor: '#4A777A',
-                    strokeWidth: 1,
-                    fillOpacity: 1,
-                    pointRadius: 9,
-                    fillColor: '#008B8B'
-                }
-            )
-        );
-    }
-
-    Tracker.Map.prototype.drawGeoFence = function (origin, radius, sides) {
-        var circle, modifyControl, point, center, layer;
-
-        center = origin || this.vector.features[0].geometry.getBounds().getCenterLonLat();
-        point = new OpenLayers.Geometry.Point(center.lon, center.lat);
-        circle = new OpenLayers.Feature.Vector(
-            OpenLayers.Geometry.Polygon.createRegularPolygon(point, radius || 10, sides || 40, 0),
+    Tracker.Map.prototype.drawMyMarker = function (point) {
+        if (this.myCurrentVector) {
+            this.vector.removeFeatures(this.myCurrentVector);
+            this.myCurrentVector.destroy();
+        }
+        this.myCurrentVector = new OpenLayers.Feature.Vector(
+            point,
             {},
             {
-                fillColor: '#F87431',
-                fillOpacity: 0.2,
-                strokeWidth: 2,
-                strokeColor: '#C35817'
+                strokeColor: "#4A777A",
+                strokeWidth: 1,
+                fillOpacity: 1,
+                pointRadius: 9,
+                fillColor: "#008B8B"
             }
         );
+        this.vector.addFeatures(this.myCurrentVector);
+    }
 
-
-        layer = new OpenLayers.Layer.Vector('fence');
-        this.map.addLayer(layer);
-        layer.addFeatures(circle);
-
-        modifyControl = new OpenLayers.Control.ModifyFeature(layer);
-        modifyControl.mode = OpenLayers.Control.ModifyFeature.RESIZE;
-
-        layer.events.register('featuremodified', circle, function (event) {
-            var bounds = event.feature.geometry.bounds;
-            console.log(bounds);
-        });
-
-        this.map.addControls([modifyControl]);
-        modifyControl.activate();
-
-        this.map.zoomToExtent(layer.getDataExtent());
-    };
-
-    Tracker.Map.prototype.getProjectionObject = function() {
-        return this.map.getProjectionObject();
+    Tracker.Map.prototype.drawTargetMarker = function (point) {
+        if (this.myTargetVector) {
+            this.vector.removeFeatures(this.myTargetVector);
+            this.myTargetVector.destroy();
+        }
+        this.myTargetVector = new OpenLayers.Feature.Vector(
+            point,
+            {},
+            {
+                strokeColor: "#9F000F",
+                strokeWidth: 1,
+                fillOpacity: 1,
+                pointRadius: 9,
+                fillColor: "#E41B17"
+            }
+        );
+        this.vector.addFeatures(this.myTargetVector);
     }
 }());

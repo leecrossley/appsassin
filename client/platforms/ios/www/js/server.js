@@ -31,7 +31,23 @@ var server = (function () {
             "defaultImage": photo
         };
         doPost("/Users", data, callback);
-        console.log("posting...");
+    };
+
+    server.getLocalGames = function (lat, lng, callback) {
+        console.log("getting games...");
+        /*var data = {
+            "lat": lat,
+            "long": lng
+        };*/
+        doGet("/opengames", callback);
+    };
+
+    server.joinGame = function (gameId, userId, callback) {
+        console.log("joining game...");
+        var data = {
+            "id": userId
+        };
+        doPost("/joingame/" + gameId, data, callback);
     };
 
     return server;
