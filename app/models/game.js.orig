@@ -16,7 +16,10 @@ var GameSchema = new Schema({
         default: "open"
     },
     players: [{
-      user: {type:Schema.Types.ObjectId,required:true},
+        user: {
+            type: Schema.Types.ObjectId,
+            required: true
+        },
         pseudonym: String
     }],
     missions: [{
@@ -46,7 +49,7 @@ GameSchema.methods.addPlayer = function(userid, continuation) {
     request("http://namey.muffinlabs.com/name.json?count=1&with_surname=true", function(error, response, body) {
         if (game.requiredPlayers <= game.requiredPlayers.length) return;
         if (!(game.players.length !== 0 && _.find(game.players, function(p) {
-            if(!p.user) return;
+            if (!p.user) return;
             return p.user.equals(userid);
         }))) {
             game.players.push({
@@ -81,8 +84,33 @@ GameSchema.methods.startIfFull = function() {
     }
 };
 
-GameSchema.methods.poshEliminate = function(victim,picture,callback)
-{
+GameSchema.methods.findVictim = function(userId) {
+    console.log("Find victim for user: " + userId);
+    return _.find(this.missions.reverse(), function(m) {
+        return m.assassin.equals(userId);
+    });
+};
+
+GameSchema.methods.findAssassin = function(userId) {
+    console.log("Find assassin for user: " + userId);
+    return _.find(this.missions.reverse(), function(m) {
+        return m.victim.equals(userId);
+    });
+};
+
+var createPictureTarget = function(encoded) {
+        var picture = createPicture(encoded);
+        picture.isTarget = true;
+        return picture;
+    };
+
+var createPicture = function(encoded) {
+        var picture = new Picture();
+        picture.encoded = encoded;
+        return picture;
+    };
+
+GameSchema.methods.poshEliminate = function(victim, picture, callback) {
 
     var picture = createPictureTarget(picture);
     picture.save(function() {
@@ -91,8 +119,8 @@ GameSchema.methods.poshEliminate = function(victim,picture,callback)
 
         console.log("Trying to recognise player via url: " + url);
 
-        var album = "appsassin2";
-        var albumkey = "533e6074bc68a3e207f78b4ce6851a3b37e7466ffb34a9e8b60888d527707c70";
+        var album = "appsassin";
+        var albumkey = "a2158bf923646965e2a65449c1b35d4b6bb1e95bb91c9934fc076e77be3019f0";
 
 
         request.post({
@@ -109,66 +137,53 @@ GameSchema.methods.poshEliminate = function(victim,picture,callback)
             console.log(body);
             if (error) {
                 console.log("there was an error sending picture for recog: " + response.body.error);
-                // TODO: return matches ...
             }
             console.log(body);
-            
+            return _.find(JSON.parse(body).photos, function(photo) {
+                var toCheck = photo.uids[0];
+                return toCheck.prediction === victim;
+            });
         });
+    });
 }
 
-GameSchema.methods.findVictim = function(userId) {
-  console.log("Find victim for user: " + userId);
-  return _.find(this.missions.reverse(), function(m) {
-    return m.assassin.equals(userId);
-  });
-};
+    GameSchema.methods.eliminate = function(user) {
+        console.log("eliminate " + user);
+        var vm = _.find(this.missions.reverse(), function(m) {
+            return m.victim.equals(user);
+        });
 
-GameSchema.methods.findAssassin = function(userId) {
-  console.log("Find assassin for user: " + userId);
-  return _.find(this.missions.reverse(), function(m) {
-    return m.victim.equals(userId);
-  });
-};
+        var am = _.find(this.missions.reverse(), function(m) {
+            return m.assassin.equals(user);
+        });
 
 
-GameSchema.methods.eliminate = function(user) {
-    console.log("eliminate " + user);
-    var vm = _.find(this.missions.reverse(), function(m) {
-        return m.victim.equals(user);
-    });
+        if (!(am || vm)) return;
 
-    var am = _.find(this.missions.reverse(), function(m) {
-        return m.assassin.equals(user);
-    });
-
-
-    if(!(am || vm))
-      return;
-
-    this.kills.push({
-        assassin: user,
-        assassinName: am.assassinName,
-        victim: am.victim,
-        victimName: am.victimName
-    });
-
-    if (!this.endGame()) {
-        missions.push({
+        this.kills.push({
             assassin: user,
             assassinName: am.assassinName,
-            victim: vm.victim,
-            victimName: vm.victimName
+            victim: am.victim,
+            victimName: am.victimName
         });
-    }
-}
 
-GameSchema.methods.endGame = function() {
-    if (this.kills.length === this.players.length - 1) {
-        this.state = "complete";
-        return true;
+        if (!this.endGame()) {
+            missions.push({
+                assassin: user,
+                assassinName: am.assassinName,
+                victim: vm.victim,
+                victimName: vm.victimName
+            });
+        }
     }
-    return false;
-}
 
-module.exports = mongoose.model('Game', GameSchema);
+    GameSchema.methods.endGame = function() {
+        if (this.kills.length === this.players.length - 1) {
+            this.state = "complete";
+            return true;
+        }
+        return false;
+    }
+
+    module.exports = mongoose.model('Game', GameSchema);
 
