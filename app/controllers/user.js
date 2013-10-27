@@ -8,6 +8,6 @@ exports.id = function(req,res){
 };
 
 exports.create = function(req,res){
-  new User({username:req.body.username,defaultImage:req.body.defaultImage}).save();
-  res.send({});
+  var user = new User({username:req.body.username,defaultImage:req.body.defaultImage});
+  res.json(user);
 };

@@ -11,9 +11,17 @@ exports.open = function(req, res) {
 
 exports.join = function(req, res) {
     Game.findById(req.params.id, function(error, game) {
-        game.addPlayer(req.params.id, function() {
+        game.addPlayer(req.body.id, function() {
             res.json(game);
         });
     });
+};
+
+exports.eliminate = function(req, res) {
+    Game.findById(req.params.id, function(error, game) {
+        game.eliminate(req.body.id);
+        game.save(function(){res.json(game);});
+    });
+
 };
 
