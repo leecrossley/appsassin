@@ -66,5 +66,14 @@ var server = (function () {
         doPost("/location/track", data, callback);
     };
 
+    server.eliminateTarget = function (user, photo, callback) {
+        console.log("killing...");
+        var data = {
+            "username": user,
+            "image": photo
+        };
+        doPost("/eliminate", data, callback);
+    };
+
     return server;
 })();

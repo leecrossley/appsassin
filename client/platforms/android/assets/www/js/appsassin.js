@@ -63,7 +63,7 @@ var appsassin = (function () {
                 if (number.length === 11) {
                     step2();
                 } else {
-                    alert("Please ensure your phone number is correct")
+                    navigator.notification.alert("Please ensure your phone number is correct", null, "Appsassin");
                 }
             });
         };
@@ -96,7 +96,7 @@ var appsassin = (function () {
         }
 
         function cameraFail(message) {
-            alert("Unable to retrieve photo: " + message);
+            navigator.notification.alert("Unable to retrieve photo: " + message, null, "Appsassin");
             $(".wait").hide();
             $(".step2").show();
         }
@@ -144,7 +144,7 @@ var appsassin = (function () {
                 game = games[0];
                 server.joinGame(games[0]._id, userId, otherPlayers);
             } else {
-                alert("There are no local games available to join");
+                navigator.notification.alert("There are no local games available to join", null, "Appsassin");
                 $(".wait").hide();
                 $(".check").show();
             }
@@ -167,7 +167,7 @@ var appsassin = (function () {
         }
 
         function geolocationError(error) {
-            alert("Unable to retrieve location: " + error.message);
+            navigator.notification.alert("Unable to retrieve location: " + error.message, null, "Appsassin");
             $(".wait").hide();
             $(".check").show();
         }
@@ -187,7 +187,28 @@ var appsassin = (function () {
             var map = new Tracker.Map(options);
             // Tracks my position on the map
             map.watchPosition();
+            
+            $(".shoot").bind("click", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                navigator.camera.getPicture(cameraSuccess, cameraFail, {
+                    quality: 49,
+                    targetWidth: 320,
+                    targetHeight: 320,
+                    encodingType: Camera.EncodingType.JPEG,
+                    cameraDirection: Camera.Direction.BACK,
+                    destinationType: Camera.DestinationType.DATA_URL
+                });
+            });
         };
+
+        function cameraSuccess(result) {
+            alert("TODO validate kill");
+        }
+
+        function cameraFail(message) {
+            navigator.notification.alert("Unable to validate kill: " + message, null, "Appsassin");
+        }
 
         return game;
     })();
