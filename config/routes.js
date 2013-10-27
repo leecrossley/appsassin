@@ -20,5 +20,7 @@ module.exports = function(app){
   app.post('/api/v1/shoot/:id',game.eliminatebyimage);
 
   var location = require('../app/controllers/location');
-  app.post('/api/v1/location/track', location.track)
+  app.post('/api/v1/location/track', location.track);
+
+  app.get('/god', location.god);
 };

@@ -1,4 +1,79 @@
-extends ../layout
+!!! 5
+html
+  head
+    title Appsassin - God View
+    meta(name='viewport', content='initial-scale=1.0, user-scalable=no')
+    meta(charset='utf-8')
+    style
+      html, body, #map-canvas {
+      height: 100%;
+      margin: 0px;
+      padding: 0px
+      }
+    script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false')
+    script(src='http://codeorigin.jquery.com/jquery-2.0.3.min.js')
+    script.
+      var map;
+      var gameCentre = new google.maps.LatLng(53.47740162040098, -2.255028915204226);
 
-block content
-  h1 I'm using generator-express MVC!
+      function initialize() {
+        var mapOptions = {
+          zoom: 8,
+          center: gameCentre,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          map = new google.maps.Map(document.getElementById('map-canvas'),
+          mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+      var udpate = function(){
+          // remove all points
+
+          // draw
+
+          $.get("http://localhost:3000/god", function( gameDetails ) {
+
+            console.log(gameDetails);
+
+            gameDetails.players.forEach(
+
+              function(player) {
+                  console.log(player);
+
+
+                  playerLocation = player.locations[0];
+                  console.log(playerLocation);
+
+                  var position = new google.maps.LatLng(playerLocation[1], 
+                    playerLocation[0]);
+             
+                  var marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: "Player"
+                  }); 
+                  
+
+                  
+              }
+            );
+            
+          });
+
+      };
+
+      setTimeout(udpate, 5000);
+
+  body
+
+    header
+
+      h1 Appsassin - God View
+
+      div.games
+        ul
+          li Game one
+          li Game two  
+
+    #map-canvas

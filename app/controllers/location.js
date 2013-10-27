@@ -48,6 +48,35 @@ var nearTo = function(lon1, lat1, lon2, lat2) {
   return d/1000; // distance in m
 };
 
+exports.god = function(req, res) {
+
+  var gameId = "526ca9fdc039fa2521000007";
+
+  Game.find({}, function(err, games){
+
+    Location.aggregate(
+        { $group: { _id: '$userId' , maxDate: { $max: '$date' }, 
+          locations: { $push: '$loc' } }}
+        //, { $sort : { name : 1 } }
+      , 
+      function(err, locations){
+        res.json({
+          games: games,
+          players: locations,
+        })
+      }); 
+      /*console.log(err);
+      if (err) return handleError(err);
+      console.log(res); // [ { maxAge: 98 } ]*/
+    });
+
+    /*Location.find ({ gameId: gameId }, 
+      
+    });*/
+
+
+};
+
 exports.track = function(req, res) {
 
   var gameId = req.body.gameId;
