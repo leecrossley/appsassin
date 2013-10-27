@@ -190,6 +190,7 @@ var appsassin = (function () {
             trackGame();
             
             $(".shoot").bind("click", function(e) {
+                $(".shoot").hide();
                 e.preventDefault();
                 e.stopPropagation();
                 navigator.camera.getPicture(cameraSuccess, cameraFail, {
@@ -239,10 +240,12 @@ var appsassin = (function () {
             }
         }
 
+        // Shot data captured
         function cameraSuccess(imageData) {
             server.shootTarget(appsassin.user, imageData, appsassin.currentGame._id, shotResult);
         }
 
+        // The result of the shot from the server (hit / miss, based on image recognition)
         function shotResult(result) {
             if (result && result.status === "hit") {
                 navigator.notification.alert("Direct Hit!", null, "Appsassin");
@@ -251,11 +254,14 @@ var appsassin = (function () {
                         navigator.notification.alert("You have a new target...", null, "Appsassin");
                     }, 5000);
                 }
+            } else {
+                $(".shoot").show();
             }
         }
 
         function cameraFail(message) {
             navigator.notification.alert("Unable to validate kill: " + message, null, "Appsassin");
+            $(".shoot").show();
         }
 
         return game;
@@ -265,6 +271,7 @@ var appsassin = (function () {
     appsassin.complete = (function () {
         var complete = {};
 
+        // Show the end game screen
         complete.init = function () {
             if (appsassin.game.isStillAlive()) {
                 $(".winner").show();
