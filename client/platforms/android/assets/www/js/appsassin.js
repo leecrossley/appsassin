@@ -7,13 +7,22 @@ var appsassin = (function () {
     // Called when the app is loaded
     appsassin.init = function () {
         overrideBackButton();
+        padiOS7StatusBar();
         userId = localStorage.getItem("userId");
+        game = localStorage.getItem("game");
         if (typeof (userId) !== "undefined" && userId !== null) {
             appsassin.switchView("main");
         } else {
             appsassin.switchView("signup");
         }
     };
+
+    // Add extra padding to the header for iOS 7
+    function padiOS7StatusBar() {
+        if (window.device && parseFloat(window.device.version) >= 7) {
+            $("html").addClass("ios7");
+        }
+    }
 
     // Switches the HTML view
     appsassin.switchView = function (viewName, elementId) {
@@ -100,19 +109,29 @@ var appsassin = (function () {
         var main = {};
 
         main.init = function () {
-            $(".wait").show();
             $(".submit").bind("click", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                main.init();
+                checkForGame();
             });
+            checkForGame();
+        };
+
+        // Checks to see if there is an active game or gets the current location
+        function checkForGame() {
+            $(".wait").show();
+            $(".check").hide();
+            if (game && game.status) {
+                otherPlayers(game);
+                return;
+            }
             var options = {
                 maximumAge: 3000,
                 timeout: 30000,
                 enableHighAccuracy: true
             };
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, options);
-        };
+        }
 
         // Checks for games in the current location
         function geolocationSuccess(position) {
@@ -122,6 +141,7 @@ var appsassin = (function () {
         // Assigns any local games returned from the server
         function handleGames(games) {
             if (games && games.length > 0) {
+                game = games[0];
                 server.joinGame(games[0]._id, userId, otherPlayers);
             } else {
                 alert("There are no local games available to join");
@@ -130,16 +150,19 @@ var appsassin = (function () {
             }
         }
 
-        // Waiting for other players
-        function otherPlayers(game) {
-            if (!game || !game.status || game.status === "open") {
+        // Wait for other players
+        function otherPlayers(updatedGame) {
+            if (game && game.state) {
+                game = updatedGame;
+            }
+            if (game.state === "inprogress") {
+                appsassin.switchView("game");
+            } else {
                 $(".wait").hide();
                 $(".others").show();
                 setTimeout(function() {
                     server.getGame(game._id, otherPlayers);
                 }, 5000);
-            } else {
-                appsassin.switchView("game");
             }
         }
 
@@ -157,7 +180,11 @@ var appsassin = (function () {
         var game = {};
 
         game.init = function () {
-            var map = new Tracker.Map();
+            var options = {
+                "user": userId,
+                "game": game._id
+            };
+            var map = new Tracker.Map(options);
             // Tracks my position on the map
             map.watchPosition();
         };

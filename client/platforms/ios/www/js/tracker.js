@@ -1,13 +1,16 @@
 var Tracker = Tracker || {};
 (function () {
     Tracker.Map = function (opt) {
-        var resize, options, self, poll = true;
+        var resize, options, self, game, user;
 
         if (!(this instanceof Tracker.Map)) {
             return new Tracker.Map(opt);
         }
 
         options = opt || {};
+
+        game = options.game;
+        user = options.user;
 
         this.map = new OpenLayers.Map({
             div: options.element || "map",
@@ -34,10 +37,25 @@ var Tracker = Tracker || {};
         self = this;
 
         this.watchedPosition = function (position) {
+            server.sendLocation(game, user, position.coords.longitude, position.coords.latitude, targetPosition);
             var point = new OpenLayers.Geometry.Point(position.coords.longitude, position.coords.latitude)
                 .transform(new OpenLayers.Projection("EPSG:4326"), self.map.getProjectionObject());
 
             self.drawMyMarker(point);
+            self.map.zoomToExtent(self.vector.getDataExtent());
+        };
+
+        function targetPosition(data) {
+            if (!data || data.length <= 1) {
+                console.log("Issue with target location");
+                return;
+            }
+            console.log(data[0]);
+            console.log(data[1]);
+            var point = new OpenLayers.Geometry.Point(data[0], data[1])
+                .transform(new OpenLayers.Projection("EPSG:4326"), self.map.getProjectionObject());
+
+            self.drawTargetMarker(point);
             self.map.zoomToExtent(self.vector.getDataExtent());
         };
     };

@@ -15,6 +15,10 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     background-color: #000;
+    background-image: url("../img/back2.jpg");
+    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: center;
     color: #FFF;
     background-attachment: fixed;
     font-family: "HelveticaNeue-Light", "HelveticaNeue", Helvetica, Arial, sans-serif;
@@ -22,12 +26,53 @@ body {
     height: 100%;
     margin: 0px;
     padding: 0px;
-    text-transform: uppercase;
     width: 100%;
 }
 
-h1 {
+.ios7 header {
+    border-top: 20px solid #B60101;
+}
+
+header {
+    background-color: #B60101;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    zoom: 1;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    height: 44px;
+    overflow: hidden;
+}
+
+header h1 {
+    color: #FFF;
+    font-weight: normal;
+    min-height: 44px;
+    line-height: 44px;
+    text-align: center;
+    font-size: 30px;
+    display: block;
+    margin: 2px 50px;
+    padding: 0;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    overflow: hidden;
+    white-space: nowrap;
+    zoom: 1;
+    outline: 0 !important;
     font-family: "brfont";
+}
+
+div.container {
+    margin: 15px;
+}
+
+div.container h3 {
+    margin: 50px 0;
+    text-align: center;
+    font-size: 16px;
 }
 
 .map {
@@ -37,60 +82,20 @@ h1 {
 }
 
 div.olControlZoom {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(255,255,255,0.4);
-    border-radius: 4px;
-    padding: 2px;
+    display: none!important;
 }
-* {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-div.olControlZoom a {
-    display: block;
-    margin: 1px;
-    padding: 0;
-    color: white;
-    font-size: 28px;
-    font-family: sans-serif;
-    font-weight: bold;
-    text-decoration: none;
-    text-align: center;
-    height: 32px;
-    width: 32px;
-    line-height: 28px;
-    text-shadow: 0 0 3px rgba(0,0,0,0.8);
-    background: #130085; /* fallback for IE - IE6 requires background shorthand*/
-    background: rgba(0, 60, 136, 0.5);
-    filter: alpha(opacity=80);
-}
-a.olControlZoomIn {
-    border-radius: 4px 4px 0 0;
-}
-a.olControlZoomOut {
-    border-radius: 0 0 4px 4px;
-}
-div.olControlZoom a:hover {
-    background: #130085; /* fallback for IE */
-    background: rgba(0, 60, 136, 0.7);
-    filter: alpha(opacity=100);
-}
-@media only screen and (max-width: 600px) {
-    div.olControlZoom a:hover {
-        background: rgba(0, 60, 136, 0.5);
-    }
-}
+
 div.olMapViewport {
     -ms-touch-action: none;
 }
+
 .olLayerGrid .olTileImage {
     -webkit-transition: opacity 0.2s linear;
     -moz-transition: opacity 0.2s linear;
     -o-transition: opacity 0.2s linear;
     transition: opacity 0.2s linear;
 }
-/* Turn on GPU support where available */
+
 .olTileImage {
     -webkit-transform: translateZ(0);
     -moz-transform: translateZ(0);
@@ -105,4 +110,54 @@ div.olMapViewport {
     -moz-perspective: 1000;
     -ms-perspective: 1000;
     perspective: 1000;
+}
+
+button {
+    font-family: "brfont";
+    display: block;
+    padding: 0.5em 1em;
+    font-size: 2em;
+    text-transform: uppercase;
+    border-radius: .3em;
+    border: 1px solid black;
+    background-color: #000;
+    background-image: url("../img/button.jpg");
+    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: center;
+    /*box-shadow: inset 0 .1em rgba(255,255,255,0.1), 0 .1em .1em black, 0 0.2em rgba(255,255,255,0.1), 0 0 0 .2em rgba(0,0,0,0.1);*/
+    color: #B60101;
+    margin: 75px auto;
+}
+
+button:hover {
+    text-shadow: 0 0 .3em #B60101;
+}
+
+button:active {
+    text-shadow: 0 0 .3em #B60101;
+    top: 0.1em;
+    /*box-shadow: inset 0 .1em rgba(255,255,255,0.1), 0 0.1em rgba(255,255,255,0.1), 0 -0.1em 0 .2em rgba(0,0,0,0.1);*/
+}
+
+input {
+    display: block;
+    font-size: 14px;
+    width: 240px;
+    margin: 25px auto;
+    padding: 10px 8px 10px 8px;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0, .55), 0px 1px 1px rgba(255,255,255,.5);
+    border: 1px solid #666;
+    opacity: 0.5;
+}
+
+input:hover,
+input:focus {
+    opacity: 0.8;
+    color: #B60101;
+    font-weight: bold;
+    box-shadow: inset 0 1px 2px rgba(255,255,255, .35), 0px 1px 15px rgba(0,246,255,.5);
+    border: 1px solid #B60101;
+    outline: none;
 }

@@ -152,10 +152,10 @@ var appsassin = (function () {
 
         // Wait for other players
         function otherPlayers(updatedGame) {
-            if (game && game.status) {
+            if (game && game.state) {
                 game = updatedGame;
             }
-            if (game.status === "inprogress") {
+            if (game.state === "inprogress") {
                 appsassin.switchView("game");
             } else {
                 $(".wait").hide();
@@ -180,7 +180,11 @@ var appsassin = (function () {
         var game = {};
 
         game.init = function () {
-            var map = new Tracker.Map();
+            var options = {
+                "user": userId,
+                "game": game._id
+            };
+            var map = new Tracker.Map(options);
             // Tracks my position on the map
             map.watchPosition();
         };

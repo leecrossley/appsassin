@@ -55,5 +55,16 @@ var server = (function () {
         doGet("/games/" + gameId, callback);
     };
 
+    server.sendLocation = function (gameId, userId, lng, lat, callback) {
+        console.log("sending location...");
+        var data = {
+            "gameId": gameId,
+            "userId": userId,
+            "lng": lng,
+            "lat": lat
+        };
+        doPost("/location/track", data, callback);
+    };
+
     return server;
 })();
