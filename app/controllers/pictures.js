@@ -74,7 +74,7 @@ exports.newuser = function(req, res) {
 
     console.log("Adding new picture for new user...");
 
-    var query = User.find().where('username').eq(req.body.username);
+    var query = User.find().where('username').equals(req.body.username);
 
     query.findOne(function(err, user) {
         if (err) throw new Error(err);
@@ -105,14 +105,16 @@ exports.recognise = function(req, res) {
     console.log(url);
 
     unirest.post('https://lambda-face-recognition.p.mashape.com/recognize?album=' + album + "&albumkey=" + albumkey).headers({
-        "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D"
+        "X-Mashape-Authorization": "zhSqQASs820A1uv3AdHO2ab2G3SUsA7D",
+        "Content-Length":0
     }).field("album", album).field("albumkey", albumkey).field("urls", url).end(function(response) {
         console.log(response.body);
         if (response.body.error) {
             console.log("there was an error sending picture for recog: " + response.body.error);
             // TODO: return matches ...
         }
-        req.json(response.body);
+        console.log(response.body);
+        res.json(response.body);
     });
 };
 
