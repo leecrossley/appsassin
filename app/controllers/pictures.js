@@ -21,8 +21,8 @@ var learn = function(username, url) {
 
         console.log("Posting to album_train, " + username);
 
-        var album = "appsassindefault";
-        var albumkey = "ed742659aa2cedd19b075cfbd683d5e64a795fa50d867784e51ec60e82f44eb8";
+        var album = "appsassin";
+        var albumkey = "a2158bf923646965e2a65449c1b35d4b6bb1e95bb91c9934fc076e77be3019f0";
 
         request.post({
             url: 'https://lambda-face-recognition.p.mashape.com/album_train',
@@ -40,6 +40,7 @@ var learn = function(username, url) {
             if (error) {
                 console.log("there was an error sending picture for recog: " + error);
             }
+            console.log(body);
         });
     };
 
@@ -109,8 +110,8 @@ exports.recognise = function(req, res) {
 
         console.log("Trying to recognise player via url: " + url);
 
-        var album = "appsassindefault";
-        var albumkey = "ed742659aa2cedd19b075cfbd683d5e64a795fa50d867784e51ec60e82f44eb8";
+        var album = "appsassin";
+        var albumkey = "a2158bf923646965e2a65449c1b35d4b6bb1e95bb91c9934fc076e77be3019f0";
 
 
         request.post({
@@ -130,7 +131,7 @@ exports.recognise = function(req, res) {
                 // TODO: return matches ...
             }
             console.log(body);
-            res.json(body);
+            res.json(JSON.parse(body));
 
         });
     });

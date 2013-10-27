@@ -3,10 +3,18 @@ var mongoose = require('mongoose'),
     User = require('../models/user'),
     Config = require('../../config/config'),
     Game = require('../models/game'),
-    unirest = require('unirest');
+    unirest = require('unirest'),
+    smslock = require('../../smslock');
 
 var sendSms = function(message, phoneNumber) {
   console.log("Send Sms to user: " + message);
+
+  if (smslock.recentlySent(phoneNumber)) {
+    console.log("Avoiding spamming SMS service");
+    return;
+  }
+
+  smslock.add(phoneNumber);
 
   var phoneNumber = "07944166597";
 
@@ -17,8 +25,9 @@ var sendSms = function(message, phoneNumber) {
 
   url = "https://api.clockworksms.com/http/send.aspx?key=" + key + "&to=" + phoneNumber + "&content=" + encodeURIComponent(message);
   console.log(url);
-  //var Request = unirest.get(url);
-  //console.log(Request);
+  unirest.get(url).end(function(response){
+    console.log(response);
+  });
 };
 
 if (typeof Number.prototype.toRad == 'undefined') {

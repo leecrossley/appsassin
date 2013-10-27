@@ -27,7 +27,7 @@ var config = {
       name: 'appsassin'
     },
     port: 3000,
-    db: 'mongodb://nodejitsu:9eb13bf493755e4e6ad41b9dd7bf96be@paulo.mongohq.com:10082/nodejitsudb6533400004'
+    db: 'mongodb://nodejitsu:c90a64e7bbf462858df23ebef93d94df@paulo.mongohq.com:10093/nodejitsudb3429878947'
   }
 };
 
