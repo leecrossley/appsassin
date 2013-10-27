@@ -125,12 +125,15 @@ GameSchema.methods.poshEliminate = function(host, victim, picture, callback) {
         }, function(error, response, body) {
             console.log(body);
             if (error) {
-                console.log("there was an error sending picture for recog: " + response.body.error);
-            };
-            var photo = _.find(JSON.parse(body).photos, function(p) {
-                return p.uids[0].prediction == victim.username;
-            });
-            callback(photo);
+                console.log("there was an error sending picture for recog: " + error);
+                callback();
+            }
+            else {
+                var photo = _.find(JSON.parse(body).photos, function(p) {
+                    return p.uids[0].prediction == victim.username;
+                });
+                callback(photo);
+            }
         });
     });
 }
