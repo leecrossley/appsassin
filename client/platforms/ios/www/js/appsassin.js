@@ -9,6 +9,7 @@ var appsassin = (function () {
         overrideBackButton();
         padiOS7StatusBar();
         userId = localStorage.getItem("userId");
+        game = localStorage.getItem("game");
         if (typeof (userId) !== "undefined" && userId !== null) {
             appsassin.switchView("main");
         } else {
@@ -108,19 +109,29 @@ var appsassin = (function () {
         var main = {};
 
         main.init = function () {
-            $(".wait").show();
             $(".submit").bind("click", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                main.init();
+                checkForGame();
             });
+            checkForGame();
+        };
+
+        // Checks to see if there is an active game or gets the current location
+        function checkForGame() {
+            $(".wait").show();
+            $(".check").hide();
+            if (game && game.status) {
+                otherPlayers(game);
+                return;
+            }
             var options = {
                 maximumAge: 3000,
                 timeout: 30000,
                 enableHighAccuracy: true
             };
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, options);
-        };
+        }
 
         // Checks for games in the current location
         function geolocationSuccess(position) {
@@ -130,6 +141,7 @@ var appsassin = (function () {
         // Assigns any local games returned from the server
         function handleGames(games) {
             if (games && games.length > 0) {
+                game = games[0];
                 server.joinGame(games[0]._id, userId, otherPlayers);
             } else {
                 alert("There are no local games available to join");
@@ -138,16 +150,19 @@ var appsassin = (function () {
             }
         }
 
-        // Waiting for other players
-        function otherPlayers(game) {
-            if (game.status === "open") {
+        // Wait for other players
+        function otherPlayers(updatedGame) {
+            if (game && game.status) {
+                game = updatedGame;
+            }
+            if (game.status === "inprogress") {
+                appsassin.switchView("game");
+            } else {
                 $(".wait").hide();
                 $(".others").show();
                 setTimeout(function() {
                     server.getGame(game._id, otherPlayers);
                 }, 5000);
-            } else {
-                appsassin.switchView("game");
             }
         }
 

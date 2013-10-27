@@ -132,7 +132,7 @@ var appsassin = (function () {
 
         // Waiting for other players
         function otherPlayers(game) {
-            if (game.status === "open") {
+            if (!game || !game.status || game.status === "open") {
                 $(".wait").hide();
                 $(".others").show();
                 setTimeout(function() {

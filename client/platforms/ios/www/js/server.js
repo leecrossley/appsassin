@@ -43,7 +43,7 @@ var server = (function () {
     };
 
     server.joinGame = function (gameId, userId, callback) {
-        console.log("joining game...");
+        console.log("joining game " + gameId + "...");
         var data = {
             "id": userId
         };
@@ -51,6 +51,7 @@ var server = (function () {
     };
 
     server.getGame = function (gameId, callback) {
+        console.log("getting game " + gameId + "...");
         doGet("/games/" + gameId, callback);
     };
 
