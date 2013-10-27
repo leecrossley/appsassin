@@ -47,14 +47,12 @@ var Tracker = Tracker || {};
                 console.log("Issue with target location");
                 return;
             }
-            console.log(data[0]);
-            console.log(data[1]);
             var point = new OpenLayers.Geometry.Point(data[0], data[1])
                 .transform(new OpenLayers.Projection("EPSG:4326"), self.map.getProjectionObject());
 
             self.drawTargetMarker(point);
             self.map.zoomToExtent(self.vector.getDataExtent());
-        };
+        }
     };
 
     Tracker.Map.prototype.watchPosition = function () {
@@ -65,6 +63,8 @@ var Tracker = Tracker || {};
         };
         this.watchId = navigator.geolocation.watchPosition(this.watchedPosition, function(e) {
             console.log(e);
+            this.clearWatch();
+            this.watchPosition();
         }, options);
     };
 

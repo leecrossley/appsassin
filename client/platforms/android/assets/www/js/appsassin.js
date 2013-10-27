@@ -2,8 +2,8 @@ var appsassin = (function () {
     var appsassin = {},
         currentView;
         
-    appsassin.userId,
-    appsassin.currentGame;
+    appsassin.userId = null;
+    appsassin.currentGame = null;
 
     // Called when the app is loaded
     appsassin.init = function () {
@@ -143,6 +143,7 @@ var appsassin = (function () {
         function handleGames(games) {
             if (games && games.length > 0) {
                 appsassin.currentGame = games[0];
+                localStorage.setItem("game", appsassin.currentGame);
                 server.joinGame(games[0]._id, appsassin.userId, otherPlayers);
             } else {
                 navigator.notification.alert("There are no local games available to join", null, "Appsassin");
@@ -155,6 +156,7 @@ var appsassin = (function () {
         function otherPlayers(updatedGame) {
             if (appsassin.currentGame && appsassin.currentGame.state) {
                 appsassin.currentGame = updatedGame;
+                localStorage.setItem("game", appsassin.currentGame);
             }
             if (appsassin.currentGame.state === "inprogress") {
                 appsassin.switchView("game");
@@ -178,12 +180,14 @@ var appsassin = (function () {
 
     // Game screen - handles game play
     appsassin.game = (function () {
-        var game = {};
+        var game = {},
+            map;
 
         game.init = function () {
-            var map = new Tracker.Map();
-            // Tracks my position on the map
+            map = new Tracker.Map();
+            // Tracks position on the map
             map.watchPosition();
+            trackGame();
             
             $(".shoot").bind("click", function(e) {
                 e.preventDefault();
@@ -199,8 +203,55 @@ var appsassin = (function () {
             });
         };
 
-        function cameraSuccess(result) {
-            alert("TODO validate kill");
+        // Uses the server data to determine if you're still alive :)
+        game.isStillAlive = function () {
+            if (appsassin.currentGame.kills && appsassin.currentGame.kills.length > 0) {
+                var i = 0;
+                while (i < appsassin.currentGame.kills.length) {
+                    var kill = appsassin.currentGame.kills[i];
+                    if (kill.victim === appsassin.userId) {
+                        return false;
+                    }
+                    i++;
+                }
+            }
+            return true;
+        };
+
+        // Polls the server and keeps track of the game status
+        function trackGame(game) {
+            if (game && game.state) {
+                appsassin.currentGame = game;
+                localStorage.setItem("game", appsassin.currentGame);
+            }
+            if (appsassin.currentGame.state === "complete") {
+                map.clearWatch();
+                appsassin.switchView("complete");
+            } else {
+                if (appsassin.game.isStillAlive()) {
+                    setTimeout(function() {
+                        server.getGame(appsassin.currentGame._id, trackGame);
+                    }, 5000);
+                } else {
+                    map.clearWatch();
+                    appsassin.switchView("complete");
+                }
+            }
+        }
+
+        function cameraSuccess(imageData) {
+            server.shootTarget(appsassin.user, imageData, appsassin.currentGame._id, shotResult);
+        }
+
+        function shotResult(result) {
+            if (result && result.status === "hit") {
+                navigator.notification.alert("Direct Hit!", null, "Appsassin");
+                if (appsassin.currentGame.state !== "complete") {
+                    setTimeout(function() {
+                        navigator.notification.alert("You have a new target...", null, "Appsassin");
+                    }, 5000);
+                }
+            }
         }
 
         function cameraFail(message) {
@@ -208,6 +259,28 @@ var appsassin = (function () {
         }
 
         return game;
+    })();
+
+    // Game complete (either you have been killed or have won)
+    appsassin.complete = (function () {
+        var complete = {};
+
+        complete.init = function () {
+            if (appsassin.game.isStillAlive()) {
+                $(".winner").show();
+            } else {
+                $(".loser").show();
+            }
+            $(".reset").bind("click", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                appsassin.init();
+            });
+            localStorage.setItem("game", null);
+            appsassin.currentGame = null;
+        };
+
+        return complete;
     })();
 
     return appsassin;
