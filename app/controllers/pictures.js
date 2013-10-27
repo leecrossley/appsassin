@@ -78,7 +78,9 @@ exports.newuser = function(req, res){
 
   console.log("Adding new picture for new user...");
 
-  var query = User.find({ username: req.body.username });
+  var query = User.find()
+    .where('username').eq(req.body.username);
+
   query.findOne(function (err, user) {
       if(err) throw new Error(err);
       
